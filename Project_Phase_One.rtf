@@ -64,4 +64,28 @@ n(time+1) = n(time) + step*(alpha_n(time) * (1-n(time)) - beta_n(time) * n(time)
 h(time+1) = h(time) + step*(alpha_h(time) * (1-h(time)) - beta_h(time) * h(time));\
 end\
 \
+\
+Vm = Vm - 70;\
+\
+\
+%membrane voltage (Vm) plot\
+\
+plot(t,Vm)\
+hold on\
+legend(\{'Membrane Voltage'\})\
+xlabel('time (miliseconds)')\
+ylabel('Voltage (mili-volts)')\
+title('Membrane Volgate over time')\
+\
+%plotting conductance (g)\
+\
+figure\
+\
+hold on\
+p2 = plot(t,gbarNa*(m.^3).*h, 'r')\
+xlabel('time (miliseconds)')\
+ylabel('Conductance')\
+title('conductance of K+ and Na+ over time')\
+\
+\
 }
