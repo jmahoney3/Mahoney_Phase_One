@@ -57,7 +57,7 @@
 \fs24 \cf0 \
 \pard\pardeftab720
 
-\fs20 \cf0 step = 0.01; \cf2 %step size set to be 0.01ms
+\fs20 \cf0 step = 0.1; \cf2 %step size set to be 0.01ms
 \fs24 \cf0 \
 \pard\pardeftab720
 
@@ -93,6 +93,12 @@
 \pard\pardeftab720
 
 \fs20 \cf2 %Gating variable equations
+\fs24 \cf0 \
+
+\fs20 \cf2 %where tha a(alpha) represents the probablilitya channel is open and
+\fs24 \cf0 \
+
+\fs20 \cf2 %b(beta) representing the probability a channel is closed
 \fs24 \cf0 \
 \pard\pardeftab720
 
@@ -151,7 +157,16 @@
 \fs24 \
 \pard\pardeftab720
 
-\fs20 \cf0     a_n(i)= 0.01 * ((10-V(i))/(exp((10-V(i))/10)-1));
+\fs20 \cf0     \cf2 %alpha and beta values are evaluated at each indivicual time point
+\fs24 \cf0 \
+
+\fs20     \cf2 %(i) such and these valuse are used to calculate currents and voltages
+\fs24 \cf0 \
+
+\fs20     \cf2 %connected to the voltage gated channels
+\fs24 \cf0 \
+
+\fs20     a_n(i)= 0.01 * ((10-V(i))/(exp((10-V(i))/10)-1));
 \fs24 \
 
 \fs20     b_n(i) = .125*exp(-V(i)/80);
@@ -172,7 +187,13 @@
 \fs20     
 \fs24 \
 
-\fs20     \cf2 %current calculations
+\fs20     \cf2 %current calculations using the 'm' 'n' and 'h' that tell the
+\fs24 \cf0 \
+
+\fs20     \cf2 %probablility a certain channel will be open.  These values were
+\fs24 \cf0 \
+
+\fs20     \cf2 %discovered by H&H using curve fitting
 \fs24 \cf0 \
 
 \fs20     I_Na = (m(i)^3) * g_Na * h(i) * (V(i)-E_Na);
@@ -183,6 +204,36 @@
 
 \fs20     I_L = g_L * (V(i)-E_L);
 \fs24 \
+
+\fs20     \cf2 %In this case there will be no injected Current (I) therefore there
+\fs24 \cf0 \
+
+\fs20     \cf2 %will be no contribution by I(i).  Esentially simplifying the equation
+\fs24 \cf0 \
+
+\fs20     \cf2 %to I_ion = I_K - I_Na - I_L;  
+\fs24 \cf0 \
+
+\fs20     
+\fs24 \
+
+\fs20     \cf2 %further simplification may be done in this case since you know the
+\fs24 \cf0 \
+
+\fs20     \cf2 %cell is in euqilibrium (steady state) the equation may be reduced to the following:      
+\fs24 \cf0 \
+
+\fs20     \cf2 %0 = I_K - I_Na - I_L
+\fs24 \cf0 \
+
+\fs20     
+\fs24 \
+
+\fs20     \cf2 %the equation is left in its entirety for simplicity of testing other
+\fs24 \cf0 \
+
+\fs20     \cf2 %injected current scenarios
+\fs24 \cf0 \
 
 \fs20     I_ion = I(i) - I_K - I_Na - I_L;
 \fs24 \
@@ -219,8 +270,9 @@
 
 \fs20 \cf3 end
 \fs24 \cf0 \
+\pard\pardeftab720
 
-\fs20 \cf3  
+\fs20 \cf2 %setting setting initial voltage to be Vrest which is -70mV
 \fs24 \cf0 \
 \pard\pardeftab720
 
@@ -233,24 +285,30 @@
 
 \fs20 \cf2 %Voltage plot
 \fs24 \cf0 \
-
-\fs20 \cf2  
-\fs24 \cf0 \
 \pard\pardeftab720
 
-\fs20 \cf0 plot(t,V,\cf4 'LineWidth'\cf0 ,2)
+\fs20 \cf0 plot(t,V)
 \fs24 \
 
 \fs20 hold \cf4 on
 \fs24 \cf0 \
 
-\fs20 legend (\{\cf4 'Voltage'\cf0 \})
+\fs20 legend (\{\cf4 'Membrane Voltage'\cf0 \})
 \fs24 \
 
-\fs20 xlabel(\cf4 'Time (miliseconds)'\cf0 )
+\fs20 xlabel(\cf4 'Time (ms)'\cf0 )
 \fs24 \
 
-\fs20 ylabel(\cf4 'Voltage (milivolts)'\cf0 )
+\fs20 ylabel(\cf4 'Voltage (mV)'\cf0 )
+\fs24 \
+
+\fs20 axis([0 100 -80 0]) 
+\fs24 \
+
+\fs20 title(\cf4 'Steady State Membrane Voltage Over Time'\cf0 )
+\fs24 \
+
+\fs20  
 \fs24 \
 
 \fs20  
@@ -269,23 +327,33 @@
 
 \fs20 \cf0 figure
 \fs24 \
+\pard\pardeftab720
 
-\fs20 p1 = plot (t,g_K*(n.^4))
+\fs20 \cf2 %plotting the K+ conductance over time
+\fs24 \cf0 \
+\pard\pardeftab720
+
+\fs20 \cf0 p1 = plot (t,g_K*(n.^4))
 \fs24 \
 
 \fs20 hold \cf4 on
 \fs24 \cf0 \
+\pard\pardeftab720
 
-\fs20 p2 = plot (t, g_Na*(m.^3).*h, \cf4 'r'\cf0 )
+\fs20 \cf2 %plotting the Na+ conductance over time
+\fs24 \cf0 \
+\pard\pardeftab720
+
+\fs20 \cf0 p2 = plot (t, g_Na*(m.^3).*h, \cf4 'r'\cf0 )
 \fs24 \
 
-\fs20 legend ([p1, p2], \cf4 'g_K'\cf0 ,\cf4 'g_Na'\cf0 )
+\fs20 legend ([p1, p2], \cf4 'g_K'\cf0 ,\cf4 'g_N_a'\cf0 )
 \fs24 \
 
-\fs20 ylabel(\cf4 'Conductance (Seimens)'\cf0 )
+\fs20 ylabel(\cf4 'Conductance (mS/cm^2)'\cf0 )
 \fs24 \
 
-\fs20 xlabel(\cf4 'Time(miliseconds)'\cf0 )
+\fs20 xlabel(\cf4 'Time(ms)'\cf0 )
 \fs24 \
 \
 }
